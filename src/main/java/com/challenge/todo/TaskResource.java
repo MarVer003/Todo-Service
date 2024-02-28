@@ -1,6 +1,6 @@
 package com.challenge.todo;
 
-import com.challenge.todo.control.TaskControl;
+import com.challenge.todo.control.TaskRepository;
 import com.challenge.todo.entity.Task;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -15,37 +15,37 @@ import java.util.List;
 public class TaskResource {
 
     @Inject
-    TaskControl taskControl;
+    TaskRepository taskRepository;
 
     @GET
     public List<Task> getAllTasks() {
-        return taskControl.listAllTasks();
+        return taskRepository.listAllTasks();
     }
 
     @GET
     @Path("/{id}")
     public Task getTaskById(@PathParam("id") Long id) {
-        return taskControl.findTaskById(id);
+        return taskRepository.findTaskById(id);
     }
 
     @POST
     @Transactional
     public void createTask(Task task) {
-        taskControl.persistTask(task);
+        taskRepository.persistTask(task);
     }
 
     @DELETE
     @Path("/{id}")
     @Transactional
     public void deleteTask(@PathParam("id") Long id) {
-        taskControl.deleteTaskById(id);
+        taskRepository.deleteTaskById(id);
     }
 
     @PUT
     @Path("/{id}")
     @Transactional
     public void updateTask(@PathParam("id") Long id, Task updatedTask) {
-        Task existingTask = taskControl.findTaskById(id);
+        Task existingTask = taskRepository.findTaskById(id);
         if (existingTask != null) {
             existingTask.setTitle(updatedTask.getTitle());
             existingTask.setDescription(updatedTask.getDescription());

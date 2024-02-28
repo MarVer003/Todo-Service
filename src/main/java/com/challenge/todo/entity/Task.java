@@ -1,24 +1,15 @@
-package com.challenge.todo;
+package com.challenge.todo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import jakarta.persistence.*;
 
 @Entity
-public class Task {
+@Table(name = "task")
+public class Task extends PanacheEntity {
 
-    @Id
-    private int id;
     private String title;
     private String description;
     private boolean completed;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;

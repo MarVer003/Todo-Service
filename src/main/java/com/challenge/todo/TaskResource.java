@@ -19,33 +19,33 @@ public class TaskResource {
 
     @GET
     public List<Task> getAllTasks() {
-        return taskRepository.listAllTasks();
+        return taskRepository.listAll();
     }
 
     @GET
     @Path("/{id}")
     public Task getTaskById(@PathParam("id") Long id) {
-        return taskRepository.findTaskById(id);
+        return taskRepository.findById(id);
     }
 
     @POST
     @Transactional
     public void createTask(Task task) {
-        taskRepository.persistTask(task);
+        taskRepository.persist(task);
     }
 
     @DELETE
     @Path("/{id}")
     @Transactional
     public void deleteTask(@PathParam("id") Long id) {
-        taskRepository.deleteTaskById(id);
+        taskRepository.deleteById(id);
     }
 
     @PUT
     @Path("/{id}")
     @Transactional
     public void updateTask(@PathParam("id") Long id, Task updatedTask) {
-        Task existingTask = taskRepository.findTaskById(id);
+        Task existingTask = taskRepository.findById(id);
         if (existingTask != null) {
             String title = updatedTask.getTitle() == null
                     ? existingTask.getTitle()

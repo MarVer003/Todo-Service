@@ -1,51 +1,50 @@
-package com.challenge.todo;
+package com.challenge.todo.manager;
 
-import com.challenge.todo.control.TaskRepository;
+import com.challenge.todo.repository.TaskRepository;
 import com.challenge.todo.entity.Task;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.PathParam;
 
 import java.util.List;
 
-@Path("/tasks")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
-public class TaskResource {
+@ApplicationScoped
+@Transactional
+public class TaskManager {
 
     @Inject
-    TaskRepository taskRepository;
+    TaskRepository repository;
 
-    @GET
     public List<Task> getAllTasks() {
-        return taskRepository.listAll();
+        return repository.listAll();
     }
 
-    @GET
-    @Path("/{id}")
-    public Task getTaskById(@PathParam("id") Long id) {
-        return taskRepository.findById(id);
+    public Task getTaskById(Long id) {
+        return repository.findById(id);
     }
 
-    @POST
-    @Transactional
     public void createTask(Task task) {
-        taskRepository.persist(task);
+        if(task.getTitle() == null || task.getTitle().isBlank()) {
+            System.err.println("Title cannot be blank or null.");
+            throw new RuntimeException("Title cannot be blank or null.");
+        }
+        if(task.isCompleted() == null)
+            task.setCompleted(false);
+
+        repository.persist(task);
     }
 
-    @DELETE
-    @Path("/{id}")
-    @Transactional
     public void deleteTask(@PathParam("id") Long id) {
-        taskRepository.deleteById(id);
+        repository.deleteById(id);
     }
 
-    @PUT
-    @Path("/{id}")
-    @Transactional
+    public void deleteAllTasks() {
+        repository.deleteAll();
+    }
+
     public void updateTask(@PathParam("id") Long id, Task updatedTask) {
-        Task existingTask = taskRepository.findById(id);
+        Task existingTask = repository.findById(id);
         if (existingTask != null) {
             String title = updatedTask.getTitle() == null
                     ? existingTask.getTitle()

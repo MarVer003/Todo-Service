@@ -1,4 +1,4 @@
-package com.challenge.todo.control;
+package com.challenge.todo.repository;
 
 import com.challenge.todo.entity.Task;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;

@@ -47,9 +47,19 @@ public class TaskResource {
     public void updateTask(@PathParam("id") Long id, Task updatedTask) {
         Task existingTask = taskRepository.findTaskById(id);
         if (existingTask != null) {
-            existingTask.setTitle(updatedTask.getTitle());
-            existingTask.setDescription(updatedTask.getDescription());
-            existingTask.setCompleted(updatedTask.isCompleted());
+            String title = updatedTask.getTitle() == null
+                    ? existingTask.getTitle()
+                    : updatedTask.getTitle();
+            String description = updatedTask.getDescription() == null
+                    ? existingTask.getDescription()
+                    : updatedTask.getDescription();
+            Boolean completion = updatedTask.isCompleted() == null
+                    ? existingTask.isCompleted()
+                    : updatedTask.isCompleted();
+
+            existingTask.setTitle(title);
+            existingTask.setDescription(description);
+            existingTask.setCompleted(completion);
         }
     }
 }

@@ -3,6 +3,6 @@ package com.challenge.todo;
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 
 @QuarkusIntegrationTest
-class GreetingResourceIT extends GreetingResourceTest {
+class TaskResourceIT extends TaskResourceTest {
     // Execute the same tests but in packaged mode.
 }

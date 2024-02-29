@@ -1,11 +1,14 @@
 package com.challenge.todo.entity;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "task")
-public class Task extends PanacheEntity {
+public class Task{
+
+    @Id
+    @GeneratedValue
+    private Long id;
 
     private String title;
     private String description;

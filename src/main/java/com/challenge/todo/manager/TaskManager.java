@@ -2,11 +2,15 @@ package com.challenge.todo.manager;
 
 import com.challenge.todo.repository.TaskRepository;
 import com.challenge.todo.entity.Task;
+import com.challenge.todo.resource.TaskResource;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @ApplicationScoped
@@ -24,7 +28,7 @@ public class TaskManager {
         return repository.findById(id);
     }
 
-    public void createTask(Task task) {
+    public Response createTask(Task task) {
         if(task.getTitle() == null || task.getTitle().isBlank()) {
             System.err.println("Title cannot be blank or null.");
             throw new RuntimeException("Title cannot be blank or null.");
@@ -33,17 +37,22 @@ public class TaskManager {
             task.setCompleted(false);
 
         repository.persist(task);
+
+
+        return Response.created(buildUri(task)).entity(task).build();
     }
 
-    public void deleteTask(@PathParam("id") Long id) {
+    public Response deleteTask(@PathParam("id") Long id) {
         repository.deleteById(id);
+
+        return Response.created(buildUri(repository.findById(id))).build();
     }
 
     public void deleteAllTasks() {
         repository.deleteAll();
     }
 
-    public void updateTask(@PathParam("id") Long id, Task updatedTask) {
+    public Response updateTask(@PathParam("id") Long id, Task updatedTask) {
         Task existingTask = repository.findById(id);
         if (existingTask != null) {
             String title = updatedTask.getTitle() == null
@@ -60,5 +69,13 @@ public class TaskManager {
             existingTask.setDescription(description);
             existingTask.setCompleted(completion);
         }
+
+        return Response.created(buildUri(updatedTask)).build();
+    }
+
+    private URI buildUri(Task task) {
+        return UriBuilder.fromResource(TaskResource.class)
+                .path(Long.toString((task.getId())))
+                .build();
     }
 }

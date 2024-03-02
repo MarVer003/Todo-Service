@@ -9,6 +9,7 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
 import java.util.List;
+import java.util.UUID;
 
 @Path("/tasks")
 @Produces(MediaType.APPLICATION_JSON)
@@ -17,19 +18,6 @@ public class TaskResource {
 
     @Inject
     TaskManager manager;
-
-    @GET
-    @Operation(summary = "Get all tasks")
-    public List<Task> getAllTasks() {
-        return manager.getAllTasks();
-    }
-
-    @GET
-    @Path("/{id}")
-    @Operation(summary = "Get task by id")
-    public Task getTaskById(@PathParam("id") Long id) {
-        return manager.getTaskById(id);
-    }
 
     @POST
     @Operation(summary = "Create task",
@@ -40,11 +28,26 @@ public class TaskResource {
         return manager.createTask(task);
     }
 
-    @DELETE
+    @GET
+    @Operation(summary = "Get all tasks")
+    public List<Task> getAllTasks() {
+        return manager.getAllTasks();
+    }
+
+    @GET
     @Path("/{id}")
-    @Operation(summary = "Delete task by id")
-    public Response deleteTask(@PathParam("id") Long id) {
-        return manager.deleteTask(id);
+    @Operation(summary = "Get task by id")
+    public Response getTaskById(@PathParam("id") UUID id) {
+        return manager.getTaskById(id);
+    }
+
+    @PUT
+    @Path("/{id}")
+    @Operation(summary = "Update task",
+            description = "Updates specified values only. If none are provided, nothing changes."
+    )
+    public Response updateTask(@PathParam("id") UUID id, Task updatedTask) {
+        return manager.updateTask(id, updatedTask);
     }
 
     @DELETE
@@ -53,12 +56,10 @@ public class TaskResource {
         manager.deleteAllTasks();
     }
 
-    @PUT
+    @DELETE
     @Path("/{id}")
-    @Operation(summary = "Update task",
-            description = "Updates specified values only. If none are provided, nothing changes."
-    )
-    public Response updateTask(@PathParam("id") Long id, Task updatedTask) {
-        return manager.updateTask(id, updatedTask);
+    @Operation(summary = "Delete task by id")
+    public Response deleteTask(@PathParam("id") UUID id) {
+        return manager.deleteTask(id);
     }
 }

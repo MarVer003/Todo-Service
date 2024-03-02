@@ -2,25 +2,30 @@ package com.challenge.todo.entity;
 
 import jakarta.persistence.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "task")
 public class Task{
 
     @Id
-    @GeneratedValue
-    private Long id;
+    private UUID id;
 
     private String title;
     private String description;
     private Boolean completed;
 
+    public Task(){}
 
-    public Long getId() {
-        return id;
+    public Task(String title, String description, Boolean completed) {
+        this.id = UUID.randomUUID();
+        this.title = title;
+        this. description = description;
+        this.completed = completed;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public UUID getId() {
+        return id;
     }
 
     public String getTitle() {

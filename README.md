@@ -8,6 +8,7 @@ Before running the application, ensure you have the following installed on your 
 
 - [Quarkus](https://quarkus.io)
 - [Maven](https://maven.apache.org)
+- [PostgreSQL](https://www.postgresql.org)
 
 ## Getting Started
 
@@ -74,7 +75,7 @@ You can use commands like ```Invoke-WebRequest``` or ```Invoke-RestMethod``` (fo
 
 ## Swagger Documentation
 
-Additionally you can also access swagger documentation at [http://localhost:8080](http://localhost:8080/q/swagger-ui).
+Additionally you can also access swagger documentation at [http://localhost:8080/q/swagger-ui](http://localhost:8080/q/swagger-ui).
 
 
 ## Stopping the Application

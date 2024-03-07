@@ -1,6 +1,6 @@
-# Todo Challenge Backend
+# Todo Backend Application
 
-This repository contains the backend application for the Todo Challenge.
+This repository contains the backend application for the Todo app.
 
 ## Prerequisites
 

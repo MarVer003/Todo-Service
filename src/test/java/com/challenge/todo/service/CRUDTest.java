@@ -1,4 +1,4 @@
-package com.challenge.todo.manager;
+package com.challenge.todo.service;
 
 import com.challenge.todo.entity.Task;
 import com.challenge.todo.validation.Validator;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CRUDTest {
 
     @Inject
-    TaskManager taskManager;
+    TaskService taskService;
 
     @Test
     public void crudTest1() {
@@ -46,11 +46,13 @@ public class CRUDTest {
     }
 
     private UUID create(Task t) {
-        Response response = taskManager.createTask(t);
+        Task task;
+        try (Response response = taskService.createTask(t)) {
 
-        Task task = response.readEntity(Task.class);
+            task = response.readEntity(Task.class);
 
-        assertEquals(201, response.getStatus());
+            assertEquals(201, response.getStatus());
+        }
         assertEquals(t.getTitle(), task.getTitle());
         assertEquals(t.getDescription(), task.getDescription());
         assertEquals(t.isCompleted(), task.isCompleted());
@@ -60,7 +62,7 @@ public class CRUDTest {
 
     private void read(UUID uuid, Task expectedTask) {
 
-        Response response = taskManager.getTaskById(uuid);
+        Response response = taskService.getTaskById(uuid);
         Task task = response.readEntity(Task.class);
 
         assertEquals(200, response.getStatus());
@@ -71,10 +73,12 @@ public class CRUDTest {
 
     private void update(UUID uuid, Task updatedTask) {
 
-        Response response = taskManager.updateTask(uuid, updatedTask);
-        Task task = response.readEntity(Task.class);
+        Task task;
+        try (Response response = taskService.updateTask(uuid, updatedTask)) {
+            task = response.readEntity(Task.class);
 
-        assertEquals(200, response.getStatus());
+            assertEquals(200, response.getStatus());
+        }
         assertEquals(updatedTask.getTitle() == null
                 ? task.getTitle()
                 : updatedTask.getTitle(), task.getTitle());
@@ -87,8 +91,9 @@ public class CRUDTest {
 
     private void delete(UUID uuid) {
 
-        Response response = taskManager.deleteTask(uuid);
+        try (Response response = taskService.deleteTask(uuid)) {
 
-        assertEquals(204, response.getStatus());
+            assertEquals(204, response.getStatus());
+        }
     }
 }

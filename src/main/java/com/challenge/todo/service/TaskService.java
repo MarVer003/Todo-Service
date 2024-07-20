@@ -1,6 +1,6 @@
-package com.challenge.todo.manager;
+package com.challenge.todo.service;
 
-import com.challenge.todo.repository.TaskRepository;
+import com.challenge.todo.dao.BaseDao;
 import com.challenge.todo.entity.Task;
 import com.challenge.todo.validation.Validator;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -14,25 +14,25 @@ import java.util.UUID;
 
 @ApplicationScoped
 @Transactional
-public class TaskManager {
+public class TaskService {
 
     @Inject
-    TaskRepository repository;
+    BaseDao baseDao;
 
     public Response createTask(Task task) {
 
         task = Validator.taskValidate(task);
-        repository.persist(task);
+        baseDao.persist(task);
 
         return Response.status(Response.Status.CREATED).entity(task).build();
     }
 
     public List<Task> getAllTasks() {
-        return repository.listAll();
+        return baseDao.listAll();
     }
 
     public Response getTaskById(UUID id) {
-        Task task = repository.findById(id);
+        Task task = baseDao.findById(id);
 
         if(task == null)
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -40,7 +40,7 @@ public class TaskManager {
     }
 
     public Response updateTask(@PathParam("id") UUID id, Task updatedTask) {
-        Task existingTask = repository.findById(id);
+        Task existingTask = baseDao.findById(id);
         if (existingTask != null) {
             String title = updatedTask.getTitle() == null
                     ? existingTask.getTitle()
@@ -62,13 +62,13 @@ public class TaskManager {
     }
 
     public void deleteAllTasks() {
-        repository.deleteAll();
+        baseDao.deleteAll();
     }
 
     public Response deleteTask(@PathParam("id") UUID id) {
-        Task task = repository.findById(id);
+        Task task = baseDao.findById(id);
         if(task != null) {
-            repository.deleteById(id);
+            baseDao.deleteById(id);
             return Response.noContent().build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
